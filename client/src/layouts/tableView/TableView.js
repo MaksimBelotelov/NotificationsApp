@@ -15,7 +15,7 @@ const TableView = (props) => {
             <tbody>
                 {
                     props.data.map(item => (
-                        <TableRowItem note={item} /> 
+                        <TableRowItem removeNote={props.removeNote} note={item} /> 
                     ))
                 }
             </tbody>

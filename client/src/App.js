@@ -1,6 +1,8 @@
 import './App.css';
+import FormNewItem from './layouts/formNewItem/FormNewItem';
 import TableView from './layouts/tableView/TableView';
 import React, { useState} from 'react';
+
 
 function App() {
 
@@ -12,10 +14,14 @@ function App() {
     ]
   );
 
-const appendNote = () => {
-  const temp = {id: 1110, title: "Из функции", date: "1234"};
-  
+const appendNote = (title, date) => {
+  const currentId = items.length + 1;
+  const temp = {id: currentId, title: title, date: date};
   setItems([...items, temp]);
+}
+
+const removeNote = (id) => {
+  setItems(items.filter(item => item.id != id ));
 }
 
   return (
@@ -25,13 +31,8 @@ const appendNote = () => {
           <h1>Список напоминаний</h1>
         </div>
         <div className='card-body'>
-          <TableView data={items}/>
-          <div>
-            <button className='btn btn-primary'
-            onClick={appendNote}>
-              Новое напоминание
-            </button>
-          </div>
+          <TableView data={items} removeNote={removeNote} />
+          <FormNewItem appendNote={appendNote}/>
         </div>
       </div>
     </div>
