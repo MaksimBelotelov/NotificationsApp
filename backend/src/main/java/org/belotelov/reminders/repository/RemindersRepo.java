@@ -1,5 +1,6 @@
 package org.belotelov.reminders.repository;
 
+import org.belotelov.reminders.config.DbQueries;
 import org.belotelov.reminders.entity.Reminder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,9 +14,11 @@ import java.util.List;
 public class RemindersRepo {
 
     private final JdbcTemplate jdbc;
+    private final DbQueries dbQueries;
 
-    public RemindersRepo(JdbcTemplate jdbc) {
+    public RemindersRepo(JdbcTemplate jdbc, DbQueries dbQueries) {
         this.jdbc = jdbc;
+        this.dbQueries = dbQueries;
     }
 
     RowMapper<Reminder> reminderRowMapper = (r, i) -> {
@@ -29,34 +32,25 @@ public class RemindersRepo {
     };
 
     public List<Reminder> findAllReminders() {
-        String sql = "SELECT * FROM reminderstable;";
-
-        return jdbc.query(sql, reminderRowMapper);
+        return jdbc.query(dbQueries.getFindAll(), reminderRowMapper);
     }
 
     public Reminder findReminderById(long id) {
-        String sql = "SELECT * FROM reminderstable WHERE id=(?);";
-
-        return jdbc.query(sql, new Object[]{id}, reminderRowMapper).getFirst();
+        return jdbc.query(dbQueries.getFindById(), new Object[]{id}, reminderRowMapper).getFirst();
     }
 
     public void saveNewReminder(Reminder reminder) {
-        String sql = "INSERT INTO reminderstable (title, description, remind) VALUES(?, ?, ?);";
-        jdbc.update(sql, reminder.getTitle(),
+        jdbc.update(dbQueries.getSaveNewReminder(), reminder.getTitle(),
                 reminder.getDescription(),
                 Timestamp.valueOf(reminder.getRemind()));
     }
 
     public void deleteReminderById(long id) {
-        String sql = "DELETE FROM reminderstable WHERE id=?;";
-
-        jdbc.update(sql, id);
+        jdbc.update(dbQueries.getDeleteById(), id);
     }
 
     public void updateReminder(Reminder reminder) {
-        String sql = "UPDATE reminderstable SET title=?, description=?, remind=? WHERE id=?;";
-
-        jdbc.update(sql, reminder.getTitle(),
+        jdbc.update(dbQueries.getUpdateUser(), reminder.getTitle(),
                 reminder.getDescription(),
                 Timestamp.valueOf(reminder.getRemind()),
                 reminder.getId());
