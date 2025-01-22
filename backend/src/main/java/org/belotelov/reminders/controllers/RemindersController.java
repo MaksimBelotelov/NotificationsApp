@@ -5,6 +5,9 @@ import org.belotelov.reminders.services.RemindersService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/reminders")
@@ -20,25 +23,20 @@ public class RemindersController {
         return service.getRemindersList();
     }
 
-    @GetMapping("/{id}")
-    public Reminder getReminderById(@PathVariable("id") long id) {
-        return service.getReminderById(id);
-    }
-
     @PostMapping("/create")
-    public void createNewReminder(@RequestBody Reminder newReminder) {
-        service.pushNewReminder(newReminder);
+    public void createNewReminder(@RequestBody Reminder reminder) {
+        service.addNewReminder(reminder);
     }
 
     @GetMapping("/delete/{id}")
     public void deleteReminderById(@PathVariable("id") long id) {
-        service.deleteById(id);
+        service.deleteReminder(id);
     }
+
 
     @PostMapping("/update/{id}")
     public void updateReminderById(@PathVariable("id") long id,
                                    @RequestBody Reminder newReminder) {
-        newReminder.setId(id);
-        service.updateReminderById(newReminder);
+        service.updateReminder(newReminder, id);
     }
 }

@@ -1,37 +1,40 @@
 package org.belotelov.reminders.services;
 
 import org.belotelov.reminders.entity.Reminder;
-import org.belotelov.reminders.repository.RemindersRepo;
+import org.belotelov.reminders.repository.ReminderRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class RemindersService {
-    private RemindersRepo repo;
+    private final ReminderRepository repo;
 
-    public RemindersService(RemindersRepo repo) {
+    public RemindersService(ReminderRepository repo) {
         this.repo = repo;
     }
 
+
+    // CRUD
+
     public List<Reminder> getRemindersList() {
-        return repo.findAllReminders();
+        return repo.findAll();
     }
 
-    public Reminder getReminderById(long id) {
-        return repo.findReminderById(id);
+    public void addNewReminder(Reminder reminder) {
+        repo.save(reminder);
     }
 
-    public void pushNewReminder(Reminder reminder) {
-        // можно сделать валидацию перед сохранением
-
-        repo.saveNewReminder(reminder);
+    public void deleteReminder(Long id) {
+        repo.deleteById(id);
     }
 
-    public void deleteById(long id) {
-        repo.deleteReminderById(id);
+    public void updateReminder(Reminder reminder, Long id) {
+        if (repo.existsById(id)) {
+            reminder.setId(id);
+            repo.save(reminder);
+        }
     }
 
-    public void updateReminderById(Reminder reminder) {
-        repo.updateReminder(reminder);
-    }
+    // поиск
+
 }
