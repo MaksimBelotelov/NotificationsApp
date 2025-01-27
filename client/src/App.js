@@ -15,13 +15,22 @@ function App() {
   );
 
 const appendNote = (title, date) => {
-  const currentId = items.length + 1;
+  const length = items.length;
+  
+  let currentId = 0;
+
+  if (length === 0) {
+    currentId = 1;
+  } else {
+    currentId = items[items.length - 1].id + 1;
+  }
+
   const temp = {id: currentId, title: title, date: date};
   setItems([...items, temp]);
 }
 
 const removeNote = (id) => {
-  setItems(items.filter(item => item.id != id ));
+  setItems(items.filter(item => item.id !== id ));
 }
 
   return (
