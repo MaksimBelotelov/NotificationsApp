@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Data
 @Entity
 @Table(name = "userstab")
@@ -16,8 +19,8 @@ public class User {
     private String email;
     private String telegram;
     private String name;
-    
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Reminder> remindersList;
 }
