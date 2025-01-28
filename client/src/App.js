@@ -1,18 +1,31 @@
 import './App.css';
 import FormNewItem from './layouts/formNewItem/FormNewItem';
 import TableView from './layouts/tableView/TableView';
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
+import axios from 'axios';
 
 
-function App() {
+const App = () => {
 
-  const [items, setItems] = useState(
-    [
-      {id: 1, title: "Новый заголовок1", date: "01.01.2026"},
-      {id: 2, title: "Новый заголовок2", date: "02.02.2027"},
-      {id: 3, title: "Новый заголовок3", date: "03.03.2028"}
-    ]
-  );
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/reminders')
+      .then(
+        res => {
+          const data = [];
+          res.data.forEach(element => {
+            data.push({
+              id: element.id,
+              title: element.title,
+              description: element.description,
+              remind: element.remind
+            })
+          })
+          setItems(data);
+        }
+      )
+  }, []);
 
 const appendNote = (title, date) => {
   const length = items.length;
@@ -30,6 +43,8 @@ const appendNote = (title, date) => {
 }
 
 const removeNote = (id) => {
+  const url = 'http://localhost:8080/api/reminders/delete/${id}';
+  axios.get(url);
   setItems(items.filter(item => item.id !== id ));
 }
 
